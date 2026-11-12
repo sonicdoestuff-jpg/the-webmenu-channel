@@ -1,7 +1,6 @@
 @echo off
 title the webmenu channel - Proxy Launcher
 
-:: Request Administrator privileges to ensure firewall rule applies
 net session >nul 2>&1
 if %errorLevel% neq 0 (
     echo Requesting Administrator permissions...
@@ -9,7 +8,6 @@ if %errorLevel% neq 0 (
     exit /b
 )
 
-:: Step up one level from \run into the main webmenu folder
 cd /d "%~dp0.."
 cls
 
@@ -33,7 +31,6 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
-:: Allow port 8080 through Windows Firewall
 netsh advfirewall firewall delete rule name="Switch Webmenu Proxy" >nul 2>&1
 netsh advfirewall firewall add rule name="Switch Webmenu Proxy" dir=in action=allow protocol=TCP localport=8080 >nul 2>&1
 
@@ -41,7 +38,7 @@ color 0B
 echo Successful! Please connect your Nintendo Switch to Wi-Fi, then press "Next"!
 echo.
 echo Switch Proxy Settings:
-echo  -^> Server: 192.168.1.176
+for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /i "IPv4"') do echo  -^> Server:%%a
 echo  -^> Port:   8080
 echo.
 echo ======================================================
