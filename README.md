@@ -1,4 +1,4 @@
-# the-webmenu-channel
+# the webmenu channel
 
 A lightweight, self-hosted web utility launcher for unmodded **Nintendo Switch** consoles. Using a local Python HTTP/HTTPS proxy server, it intercepts the Switch's captive portal check and loads a custom, Joy-Con-friendly dashboard packed with built-in tools and web apps.
 
@@ -30,14 +30,14 @@ A lightweight, self-hosted web utility launcher for unmodded **Nintendo Switch**
 ### 1. Start the Local Proxy Server
 1. Open the `run/` folder and double-click **`start-launcher.bat`**.
 2. Click **Yes** when prompted for Administrator permissions (used to open port `8080` in Windows Defender Firewall).
-3. Note your host PC's **IPv4 address** (you can check this anytime by running `ipconfig` in Command Prompt).
+3. Note your host PC's **IPv4 address** printed in the launcher window (or check anytime by running `ipconfig` in Command Prompt).
 
 ### 2. Configure Your Nintendo Switch
 1. On your Switch, open **System Settings** > **Internet** > **Internet Settings**.
 2. Select your Wi-Fi network and choose **Change Settings**.
 3. Ensure **DNS Settings** is set to **Automatic**.
 4. Scroll down to **Proxy Settings** and set it to **On**:
-   * **Server:** Your PC's local IPv4 address (e.g., `192.168.1.176`)
+   * **Server:** Your PC's local IPv4 address (e.g., `192.168.1.X`)
    * **Port:** `8080`
 5. Save your settings and select **Connect to This Network**.
 6. When the *"Registration is required to use this network"* prompt appears, select **Next** to launch **the webmenu channel**.
