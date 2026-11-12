@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Calculator - the webmenu channel</title>
+  <style>
+    body { font-family: sans-serif; background: #eef1f7; margin: 0; padding: 30px 260px; }
+    .box { background: #fff; border-radius: 12px; padding: 24px; border: 2px solid #cbd5e0; }
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    h2 { color: #1b4f9c; margin: 0; }
+    .back { background: #e4e8f1; color: #1a202c; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-weight: bold; border: 3px solid transparent; }
+    .back:focus { border-color: #2b6cb0; background: #fff; outline: none; }
+    input { width: 100%; font-size: 24px; padding: 12px; margin-bottom: 12px; border: 2px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; text-align: right; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    button { font-size: 20px; font-weight: bold; padding: 14px; background: #edf2f7; border: 3px solid transparent; border-radius: 8px; }
+    button:focus { border-color: #2b6cb0; background: #fff; outline: none; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="top">
+      <h2>Calculator</h2>
+      <a href="index.html" class="back">Back to Library</a>
+    </div>
+    <input type="text" id="disp" readonly placeholder="0">
+    <div class="grid">
+      <button onclick="add('7')">7</button><button onclick="add('8')">8</button><button onclick="add('9')">9</button><button onclick="add('/')">/</button>
+      <button onclick="add('4')">4</button><button onclick="add('5')">5</button><button onclick="add('6')">6</button><button onclick="add('*')">*</button>
+      <button onclick="add('1')">1</button><button onclick="add('2')">2</button><button onclick="add('3')">3</button><button onclick="add('-')">-</button>
+      <button onclick="clr()">C</button><button onclick="add('0')">0</button><button onclick="eq()">=</button><button onclick="add('+')">+</button>
+    </div>
+  </div>
+  <script>
+    var d = document.getElementById('disp');
+    function add(v) { d.value += v; }
+    function clr() { d.value = ''; }
+    function eq() { try { d.value = eval(d.value); } catch(e) { d.value = 'Error'; } }
+  </script>
+</body>
+</html>

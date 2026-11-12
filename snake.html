@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Snake - the webmenu channel</title>
+  <style>
+    body { font-family: sans-serif; background: #eef1f7; margin: 0; padding: 30px 180px; }
+    .box { background: #fff; border-radius: 12px; padding: 24px; border: 2px solid #cbd5e0; }
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    h2 { color: #1b4f9c; margin: 0; }
+    .back { background: #e4e8f1; color: #1a202c; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-weight: bold; border: 3px solid transparent; }
+    .back:focus { border-color: #2b6cb0; background: #fff; outline: none; }
+    .wrap { display: flex; align-items: center; justify-content: center; gap: 40px; }
+    canvas { background: #1a202c; border-radius: 8px; }
+    .pad { display: grid; grid-template-columns: repeat(3, 60px); gap: 8px; }
+    button { height: 60px; font-size: 20px; font-weight: bold; background: #e4e8f1; border: 3px solid transparent; border-radius: 8px; }
+    button:focus { border-color: #2b6cb0; background: #fff; outline: none; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="top">
+      <h2>Snake</h2>
+      <a href="index.html" class="back">Back to Library</a>
+    </div>
+    <div class="wrap">
+      <canvas id="c" width="400" height="280"></canvas>
+      <div class="pad">
+        <div></div><button onclick="dir='UP'">▲</button><div></div>
+        <button onclick="dir='LEFT'">◀</button><button onclick="reset()">↻</button><button onclick="dir='RIGHT'">▶</button>
+        <div></div><button onclick="dir='DOWN'">▼</button><div></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var c = document.getElementById('c'), ctx = c.getContext('2d');
+    var box = 20, snake, food, dir, timer;
+    function reset() {
+      if (timer) clearInterval(timer);
+      snake = [{x: 180, y: 140}];
+      dir = 'RIGHT';
+      food = {x: 100, y: 100};
+      timer = setInterval(draw, 160);
+    }
+    function draw() {
+      ctx.fillStyle = '#1a202c'; ctx.fillRect(0, 0, 400, 280);
+      for (var i = 0; i < snake.length; i++) {
+        ctx.fillStyle = i === 0 ? '#48bb78' : '#68d391';
+        ctx.fillRect(snake[i].x, snake[i].y, 18, 18);
+      }
+      ctx.fillStyle = '#f56565'; ctx.fillRect(food.x, food.y, 18, 18);
+      var hx = snake.x, hy = snake.y;
+      if (dir === 'LEFT') hx -= box;
+      if (dir === 'UP') hy -= box;
+      if (dir === 'RIGHT') hx += box;
+      if (dir === 'DOWN') hy += box;
+      if (hx === food.x && hy === food.y) {
+        food = {x: Math.floor(Math.random()*19)*box, y: Math.floor(Math.random()*13)*box};
+      } else { snake.pop(); }
+      if (hx < 0 || hx >= 400 || hy < 0 || hy >= 280) {
+        clearInterval(timer);
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 22px sans-serif'; ctx.fillText('Game Over! Press ↻', 95, 145);
+        return;
+      }
+      snake.unshift({x: hx, y: hy});
+    }
+    reset();
+  </script>
+</body>
+</html>

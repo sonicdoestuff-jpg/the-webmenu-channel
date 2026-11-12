@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>XploreSW - the webmenu channel</title>
+  <style>
+    body { font-family: sans-serif; background: #eef1f7; margin: 0; padding: 26px 140px; }
+    .box { background: #fff; border-radius: 12px; padding: 22px; border: 2px solid #cbd5e0; }
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    h2 { color: #1b4f9c; margin: 0; }
+    .back { background: #e4e8f1; color: #1a202c; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; border: 3px solid transparent; }
+    .back:focus { border-color: #2b6cb0; background: #fff; outline: none; }
+    .path-bar { background: #edf2f7; padding: 8px 12px; border-radius: 6px; font-size: 13px; color: #4a5568; margin-bottom: 12px; word-break: break-all; }
+    .list { display: flex; flex-direction: column; gap: 6px; max-height: 360px; overflow-y: auto; }
+    .item { display: flex; align-items: center; padding: 10px 14px; background: #f7fafc; border: 2px solid transparent; border-radius: 8px; text-decoration: none; color: #1a202c; font-weight: bold; cursor: pointer; text-align: left; font-size: 15px; }
+    .item:focus, .item:hover { border-color: #2b6cb0; background: #ebf8ff; outline: none; }
+    .badge { display: inline-block; width: 44px; font-size: 12px; color: #2b6cb0; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="top">
+      <h2>XploreSW (PC File Explorer)</h2>
+      <a href="index.html" class="back">Back to Library</a>
+    </div>
+    <div class="path-bar" id="cur-path">Loading PC files...</div>
+    <div class="list" id="file-list"></div>
+  </div>
+  <script>
+    function loadDir(dirPath) {
+      var url = '/api/files' + (dirPath ? '?dir=' + encodeURIComponent(dirPath) : '');
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          document.getElementById('cur-path').innerText = data.current;
+          var list = document.getElementById('file-list');
+          list.innerHTML = '';
+
+          if (data.parent && data.parent !== data.current) {
+            var upBtn = document.createElement('button');
+            upBtn.className = 'item';
+            upBtn.innerHTML = '<span class="badge">[UP]</span> .. (Parent Folder)';
+            upBtn.onclick = function () { loadDir(data.parent); };
+            list.appendChild(upBtn);
+          }
+
+          for (var i = 0; i < data.items.length; i++) {
+            (function (item) {
+              if (item.is_dir) {
+                var btn = document.createElement('button');
+                btn.className = 'item';
+                btn.innerHTML = '<span class="badge">[DIR]</span> ' + item.name;
+                btn.onclick = function () { loadDir(item.path); };
+                list.appendChild(btn);
+              } else {
+                var link = document.createElement('a');
+                link.className = 'item';
+                link.href = '/api/download?path=' + encodeURIComponent(item.path);
+                link.innerHTML = '<span class="badge">[FILE]</span> ' + item.name;
+                list.appendChild(link);
+              }
+            })(data.items[i]);
+          }
+        }
+      };
+      xhr.send();
+    }
+    loadDir('');
+  </script>
+</body>
+</html>

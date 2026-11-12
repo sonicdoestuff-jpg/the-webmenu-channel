@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Browser Info - the webmenu channel</title>
+  <style>
+    body { font-family: sans-serif; background: #eef1f7; margin: 0; padding: 30px 180px; }
+    .box { background: #fff; border-radius: 12px; padding: 24px; border: 2px solid #cbd5e0; }
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    h2 { color: #1b4f9c; margin: 0; }
+    .back { background: #e4e8f1; color: #1a202c; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-weight: bold; border: 3px solid transparent; }
+    .back:focus { border-color: #2b6cb0; background: #fff; outline: none; }
+    p { font-size: 16px; margin-bottom: 10px; color: #2d3748; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="top">
+      <h2>Browser Info</h2>
+      <a href="index.html" class="back">Back to Library</a>
+    </div>
+    <p><strong>Menu:</strong> the webmenu channel v1.0.0</p>
+    <p><strong>Proxy Host:</strong> 192.168.1.176:8080</p>
+    <p id="ua"></p>
+  </div>
+  <script>
+    document.getElementById('ua').innerHTML = '<strong>Browser Details:</strong> ' + navigator.userAgent;
+  </script>
+</body>
+</html>

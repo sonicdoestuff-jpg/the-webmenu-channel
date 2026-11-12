@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>Joy-Con Tester - the webmenu channel</title>
+  <style>
+    body { font-family: sans-serif; background: #eef1f7; margin: 0; padding: 26px 160px; }
+    .box { background: #fff; border-radius: 12px; padding: 24px; border: 2px solid #cbd5e0; }
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    h2 { color: #1b4f9c; margin: 0; }
+    .back { background: #e4e8f1; color: #1a202c; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; border: 3px solid transparent; }
+    .back:focus { border-color: #2b6cb0; background: #fff; outline: none; }
+    .note { background: #ebf8ff; border-left: 4px solid #3182ce; padding: 10px 14px; font-size: 13px; color: #2c5282; margin-bottom: 14px; }
+    .status { font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #2d3748; }
+    canvas { background: #1a202c; border-radius: 8px; display: block; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="top">
+      <h2>Joy-Con & Touch Tester</h2>
+      <a href="index.html" class="back">Back to Library</a>
+    </div>
+    <div class="note">Note: Switch's web browser blocks the Right Joy-Con IR camera sensor on unmodded firmware, so this utility tests Joy-Con sticks, buttons, and touchscreen input instead!</div>
+    <div class="status" id="gp-status">Press any Joy-Con button or touch the canvas below:</div>
+    <canvas id="pad-canvas" width="520" height="220"></canvas>
+  </div>
+  <script>
+    var c = document.getElementById('pad-canvas'), ctx = c.getContext('2d');
+    ctx.fillStyle = '#1a202c'; ctx.fillRect(0, 0, 520, 220);
+
+    c.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+      var rect = c.getBoundingClientRect();
+      var t = e.touches[0];
+      ctx.fillStyle = '#63b3ed';
+      ctx.beginPath();
+      ctx.arc(t.clientX - rect.left, t.clientY - rect.top, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }, false);
+
+    setInterval(function () {
+      if (!navigator.getGamepads) return;
+      var gps = navigator.getGamepads();
+      if (gps && gps[0]) {
+        var gp = gps[0];
+        var pressed = [];
+        for (var i = 0; i < gp.buttons.length; i++) {
+          if (gp.buttons[i].pressed) pressed.push('Btn ' + i);
+        }
+        document.getElementById('gp-status').innerText =
+          'Joy-Con Active | Stick: (' + gp.axes[0].toFixed(2) + ', ' + gp.axes[1].toFixed(2) + ') | Pressed: ' + (pressed.join(', ') || 'None');
+      }
+    }, 100);
+  </script>
+</body>
+</html>
