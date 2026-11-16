@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1280, initial-scale=1.0">
-  <title>the webmenu channel</title>
+  <title>the webmenu channel v1.0.1</title>
   <style>
     @font-face {
       font-family: 'PF Square Sans Pro';
@@ -19,275 +19,391 @@
       font-weight: 700;
       font-style: normal;
     }
+    
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      user-select: none;
     }
+
+    script, #js-logic-container {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      width: 0 !important;
+      position: absolute !important;
+    }
+
     body {
       font-family: 'PF Square Sans Pro', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: #eef1f7;
-      color: #2b3445;
+      background-color: #ebebeb;
+      color: #333333;
       height: 100vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
-    .header {
-      position: relative;
-      background: linear-gradient(135deg, #1b4f9c 0%, #3b7be3 65%, #5b9bf8 100%);
-      color: #ffffff;
-      padding: 24px 64px 54px 64px;
+
+    /* Top Half - Clean Off-White Active Info Area */
+    .top-info-panel {
+      height: 52%;
+      background-color: #ebebeb;
+      padding: 45px 80px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-shrink: 0;
+      gap: 40px;
+      position: relative;
     }
-    .subtitle-tag {
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      opacity: 0.75;
-      margin-bottom: 4px;
-      font-weight: 500;
-    }
-    .main-title {
-      font-size: 42px;
+
+    /* Updated Title Header Layout */
+    .system-title-tag {
+      position: absolute;
+      top: 24px;
+      left: 80px;
+      display: flex;
+      flex-direction: column;
       line-height: 1.1;
     }
-    .font-medium { font-weight: 500; }
-    .font-bold { font-weight: 700; }
-    .version-text {
-      font-size: 14px;
-      opacity: 0.8;
-      margin-top: 4px;
-      font-weight: 500;
+    .system-title-tag .font-bold { 
+      font-family: 'PF Square Sans Pro', sans-serif; 
+      font-weight: 700; 
+      font-size: 26px;
+      color: #333333; 
     }
-    .refresh-btn {
-      z-index: 2;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.5);
-      background: rgba(255, 255, 255, 0.15);
-      color: #ffffff;
+    .system-title-tag .font-version { 
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 13px; 
+      font-weight: 600;
+      color: #777777;
+    }
+    .system-title-tag .font-sub {
+      font-size: 11px;
+      color: #999999;
+      font-weight: 500;
+      margin-top: 1px;
+    }
+
+    /* Large Square Preview Box */
+    .large-preview-container {
+      width: 165px;
+      height: 165px;
+      background-color: #0050b3;
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-decoration: none;
-      font-size: 22px;
-      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+      overflow: hidden;
     }
-    .refresh-btn:focus,
-    .refresh-btn:hover {
-      border-color: #ffffff;
-      background: rgba(255, 255, 255, 0.3);
-      outline: none;
-    }
-    .wave-divider {
-      position: absolute;
-      bottom: -1px;
-      left: 0;
+
+    #preview-img {
       width: 100%;
-      height: 38px;
-      z-index: 1;
+      height: 100%;
+      object-fit: cover;
     }
-    .main-content {
-      flex: 1;
-      padding: 12px 180px 10px 180px;
+
+    .app-details {
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      gap: 5px;
+      margin-top: 15px;
     }
-    .library-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
+
+    .app-details h2 {
+      font-size: 34px;
       font-weight: 700;
-      color: #4a5568;
-      font-size: 15px;
+      color: #111111;
     }
-    .library-count {
-      font-weight: 500;
-      color: #718096;
+
+    .app-details .meta-line {
       font-size: 14px;
+      color: #555555;
+      font-weight: 500;
     }
-    .card-list {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-      padding-bottom: 16px;
+
+    .app-details p {
+      font-size: 15px;
+      color: #666666;
+      line-height: 1.4;
+      margin-top: 2px;
     }
-    .app-card {
+
+    /* Bottom Half - Vivid Blue Horizontal Carousel Panel */
+    .bottom-carousel-panel {
+      height: 48%;
+      background-color: #009bf3;
+      padding: 0 40px;
       display: flex;
       align-items: center;
-      background: #e4e8f1;
-      border: 3px solid transparent;
-      border-radius: 10px;
-      padding: 11px 18px;
+      position: relative;
+    }
+
+    /* Horizontal Scroll Strip Container */
+    .scroll-row {
+      width: 100%;
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding: 20px 0;
+      scroll-behavior: smooth;
+    }
+    
+    .scroll-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Square App Selector Blocks */
+    .app-card {
+      width: 135px;
+      height: 135px;
+      background-color: #ffffff;
+      border: 4px solid transparent;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px;
       text-decoration: none;
-      color: #2d3748;
+      color: #333333;
+      flex-shrink: 0;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+      transition: transform 0.1s ease;
+      overflow: hidden;
     }
-    .app-card:focus,
-    .app-card:hover {
-      background: #ffffff;
-      border-color: #2b6cb0;
-      box-shadow: 0 4px 12px rgba(43, 108, 176, 0.16);
-      outline: none;
-    }
-    .app-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 8px;
-      background: #1a202c;
-      color: #63b3ed;
+
+    .card-icon-container {
+      width: 90px;
+      height: 90px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 19px;
-      font-weight: 700;
-      margin-right: 16px;
-      flex-shrink: 0;
+      overflow: hidden;
+      border-radius: 2px;
+      pointer-events: none; /* Forces touch event layer to stay focused on the outer card button */
     }
-    .app-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: #1a202c;
+
+    .card-icon-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
-    .app-desc {
-      font-size: 13px;
-      font-weight: 500;
-      color: #718096;
-    }
-    .footer {
-      padding: 8px 64px 14px 64px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 24px;
-      color: #4a5568;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-    .btn-badge {
-      display: inline-flex;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #2d3748;
-      color: #ffffff;
+
+    .card-title {
       font-size: 12px;
       font-weight: 700;
+      text-align: center;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #333333;
+      margin-top: 4px;
+      pointer-events: none;
+    }
+
+    .app-card:focus,
+    .app-card:hover {
+      border-color: #ffffff;
+      background-color: #ffffff;
+      box-shadow: 0 0 16px rgba(255,255,255,0.75);
+      transform: scale(1.04);
+      outline: none;
+    }
+
+    /* Modern Footer Guide Bar */
+    .footer-bar {
+      position: absolute;
+      bottom: 12px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 700;
+      pointer-events: none;
+    }
+
+    .footer-left {
+      color: rgba(255,255,255,0.85);
+      font-size: 15px;
+    }
+
+    .footer-right {
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn-badge {
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
       align-items: center;
       justify-content: center;
-      margin-right: 6px;
+      margin-right: 4px;
+      border: 1px solid rgba(255,255,255,0.4);
     }
   </style>
 </head>
 <body>
-  <header class="header">
-    <div>
-      <div class="subtitle-tag">NINTENDO SWITCH</div>
-      <h1 class="main-title">
-        <span class="font-medium">the</span>
-        <span class="font-bold">webmenu</span>
-        <span class="font-medium">channel</span>
-      </h1>
-      <div class="version-text">v1.0.0</div>
+
+  <!-- Top Active Details Area -->
+  <div class="top-info-panel">
+    <div class="system-title-tag">
+      <span class="font-bold">webmenu <span class="font-version">v1.0.1</span></span>
+      <span class="font-sub">the-webmenu-channel</span>
     </div>
-    <a href="index.html" class="refresh-btn">↻</a>
-    <svg class="wave-divider" viewBox="0 0 1440 80" preserveAspectRatio="none">
-      <path fill="#eef1f7" d="M0,32 C360,88 1080,-16 1440,42 L1440,80 L0,80 Z"></path>
-    </svg>
-  </header>
-
-  <main class="main-content">
-    <div class="library-header">
-      <span>Your library</span>
-      <span class="library-count">9 items</span>
+    
+    <div class="large-preview-container">
+      <img id="preview-img" src="Google/icon.png" alt="App Preview">
     </div>
-
-    <!--
-    # i was planning to do pictopicto
-    # i guess it did NOT work out...
-    -->
-
-    <div class="card-list">
-      <a href="google.html" class="app-card">
-        <div class="app-icon">G</div>
-        <div>
-          <div class="app-title">Google</div>
-          <div class="app-desc">Search the web using Google Custom Search</div>
-        </div>
-      </a>
-      <a href="switchbrowse.html" class="app-card">
-        <div class="app-icon">SB</div>
-        <div>
-          <div class="app-title">SwitchBrowse</div>
-          <div class="app-desc">Custom search engine tailored for Nintendo Switch</div>
-        </div>
-      </a>
-      <a href="xploresw.html" class="app-card">
-        <div class="app-icon">X</div>
-        <div>
-          <div class="app-title">XploreSW</div>
-          <div class="app-desc">Browse and download files directly from your PC</div>
-        </div>
-      </a>
-      <a href="store.html" class="app-card">
-        <div class="app-icon">A</div>
-        <div>
-          <div class="app-title">App Store</div>
-          <div class="app-desc">Launch custom web apps added via publish-app.bat</div>
-        </div>
-      </a>
-      <a href="notepad.html" class="app-card">
-        <div class="app-icon">N</div>
-        <div>
-          <div class="app-title">Quick Notepad</div>
-          <div class="app-desc">Jot down quick notes, codes, or reminders</div>
-        </div>
-      </a>
-      <a href="snake.html" class="app-card">
-        <div class="app-icon">S</div>
-        <div>
-          <div class="app-title">Snake</div>
-          <div class="app-desc">Classic Snake: eat apples, grow longer, and avoid walls</div>
-        </div>
-      </a>
-      <a href="calc.html" class="app-card">
-        <div class="app-icon">C</div>
-        <div>
-          <div class="app-title">Calculator</div>
-          <div class="app-desc">On-screen button calculator for quick math</div>
-        </div>
-      </a>
-      <a href="joycon.html" class="app-card">
-        <div class="app-icon">J</div>
-        <div>
-          <div class="app-title">Joy-Con Tester</div>
-          <div class="app-desc">Test Joy-Con buttons, sticks, and touchscreen drawing</div>
-        </div>
-      </a>
-      <a href="info.html" class="app-card">
-        <div class="app-icon">i</div>
-        <div>
-          <div class="app-title">Browser Info</div>
-          <div class="app-desc">Check screen resolution, user agent, and proxy status</div>
-        </div>
-      </a>
+    
+    <div class="app-details">
+      <h2 id="preview-title">Google</h2>
+      <div class="meta-line" id="preview-meta">Author: Webmenu • Version: 1.0.0</div>
+      <p id="preview-desc">Search the web using Google Custom Search</p>
     </div>
-  </main>
+  </div>
 
-  <footer class="footer">
-    <div><span class="btn-badge">A</span>Select</div>
-  </footer>
+  <!-- Bottom Horizontal Grid Strip -->
+  <div class="bottom-carousel-panel">
+    <div class="scroll-row" id="card-row">
+      
+      <a href="google.html" class="app-card" data-title="Google" data-author="Webmenu" data-version="1.0.0" data-desc="Search the web using Google Custom Search" data-img="Google/icon.png">
+        <div class="card-icon-container"><img class="card-icon-img" src="Google/icon.png"></div>
+        <div class="card-title">Google</div>
+      </a>
 
-  <script>
-    // Keep proxy session active by pinging the server every 3 minutes
-    setInterval(function () {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', '/index.html?keepalive=' + Date.now(), true);
-      xhr.send();
-    }, 180000);
-  </script>
-</body>
-</html>
+      <a href="switchbrowse.html" class="app-card" data-title="SwitchBrowse" data-author="Webmenu" data-version="1.1.2" data-desc="Custom search engine tailored for Nintendo Switch web utility exploring." data-img="SwitchBrowse/icon.png">
+        <div class="card-icon-container"><img class="card-icon-img" src="SwitchBrowse/icon.png"></div>
+        <div class="card-title">SwitchBrowse</div>
+      </a>
+
+      <a href="xploresw.html" class="app-card" data-title="XploreSW" data-author="PC Link" data-version="2.0.4" data-desc="Browse directories and download structures directly from your computer files over wireless local networks." data-img="XploreSW/icon.png">
+        <div class="card-icon-container"><img class="card-icon-img" src="XploreSW/icon.png"></div>
+        <div class="card-title">XploreSW</div>
+      </a>
+
+      <a href="store.html" class="app-card" data-title="App Store" data-author="Webmenu" data-version="1.0.0" data-desc="Launch custom published web modifications and third-party apps added through your publisher script." data-img="App_Store/icon.png">
+        <div class="card-icon-container"><img class="card-icon-img" src="App_Store/icon.png"></div>
+        <div class="card-title">App Store</div>
+      </a>
+
+      <a href="notepad.html" class="app-card" data-title="Quick Notepad" data-author="Utility" data-version="1.0.5" data-desc="Jot down quick hex strings, access codes, layout logs, or reminders directly into browser storage." data-img="Quick_Notepad/icon.png">
+        <div class="card-icon-container"><img class="card-icon-img" src="Quick_Notepad/icon.png"></div>
+        <div class="card-title">Quick Notepad</div>
+      </a>
+
+      <a href="snake.html" class="app-card" data-title="Snake" data-author="Arcade" data-version="1.3.0" data-desc="Classic horizontal matrix movement game. Eat the apples, track coordinates, increase size." data-img="Snake/icon.png">
+        <div class="card-icon-container"><img class="card-icon-img" src="Snake/icon.png"></div>
+        <div class="card-title">Snake</div>
+      </a>
+
+      <a href="calc.html" class="app-card" data-title="Calculator" data-author="Utility" data-version="1.0.0" data-desc="Fast on-screen operations evaluator for checking addresses or basic network calculations." data-img="Calculator/icon.png">
+        <div class="card-icon-container"><img class="card-icon-img" src="Calculator/icon.png"></div>
+        <div class="card-title">Calculator</div>
+      </a>
+
+      <a href="joycon.html" class="app-card" data-title="Joy-Con Tester" data-author="Diagnostics" data-version="1.2.1" data-desc="Live interactive map tracking device buttons, analog positions, and touchscreen tracking values." data-img="Joy_Con_Tester/icon.png">
+        <div class="card-icon-container"><img class="card-icon-img" src="Joy_Con_Tester/icon.png"></div>
+        <div class="card-title">Joy-Con Tester</div>
+      </a>
+
+Use code with caution.
+Browser Info
+sdmc:/switch
+
+XUnstar
+－Theme Menu
+YNetLoader
+BBack
+ALaunch
+
+
+(function() {
+var cards = document.querySelectorAll('.app-card');
+var pImg = document.getElementById('preview-img');
+var pTitle = document.getElementById('preview-title');
+var pMeta = document.getElementById('preview-meta');
+var pDesc = document.getElementById('preview-desc');
+var pathIndicator = document.getElementById('path-indicator');
+// Handles local path case-sensitivity issues
+var imgs = document.getElementsByTagName('img');
+var imgIndex = 0;
+while (imgIndex !== imgs.length) {
+var targetImg = imgs[imgIndex];
+if (targetImg) {
+targetImg.addEventListener('error', function() {
+var src = this.src;
+if (src.indexOf('App_Store') !== -1) this.src = 'app_store/icon.png';
+else if (src.indexOf('Calculator') !== -1) this.src = 'calculator/icon.png';
+else if (src.indexOf('Joy_Con_Tester') !== -1) this.src = 'joy_con_tester/icon.png';
+else if (src.indexOf('Quick_Notepad') !== -1) this.src = 'quick_notepad/icon.png';
+else if (src.indexOf('SwitchBrowse') !== -1) this.src = 'switchbrowse/icon.png';
+else if (src.indexOf('XploreSW') !== -1) this.src = 'xploresw/icon.png';
+else this.src = 'Google/icon.png';
+});
+}
+imgIndex = imgIndex + 1;
+}
+function updateActivePreview(el) {
+var title = el.getAttribute('data-title');
+var author = el.getAttribute('data-author');
+var version = el.getAttribute('data-version');
+var desc = el.getAttribute('data-desc');
+var imgSrc = el.getAttribute('data-img');
+pTitle.innerText = title;
+pMeta.innerText = 'Author: ' + author + ' • Version: ' + version;
+pDesc.innerText = desc;
+pImg.src = imgSrc;
+pathIndicator.innerText = 'sdmc:/switch/' + title.toLowerCase().replace(/\s+/g, '');
+var pBox = document.querySelector('.large-preview-container');
+if (title === 'SwitchBrowse') pBox.style.backgroundColor = '#1a1a1a';
+else if (title === 'XploreSW') pBox.style.backgroundColor = '#3182ce';
+else if (title === 'Snake') pBox.style.backgroundColor = '#2d3748';
+else pBox.style.backgroundColor = '#0050b3';
+var row = document.getElementById('card-row');
+var rectEl = el.getBoundingClientRect();
+var rectRow = row.getBoundingClientRect();
+if (rectEl.left !== rectRow.left) {
+if (rectEl.left < rectRow.left) {
+row.scrollLeft = row.scrollLeft - (rectRow.left - rectEl.left + 20);
+}
+}
+if (rectEl.right !== rectRow.right) {
+if (rectEl.right > rectRow.right) {
+row.scrollLeft = row.scrollLeft + (rectEl.right - rectRow.right + 20);
+}
+}
+}
+// Listens to mouseover (virtual cursor tracking) and keyboard focus
+var cardIndex = 0;
+while (cardIndex !== cards.length) {
+var cardEl = cards[cardIndex];
+cardEl.addEventListener('focus', function() { updateActivePreview(this); });
+cardEl.addEventListener('mouseover', function() { updateActivePreview(this); });
+cardIndex = cardIndex + 1;
+}
+if (cards.length !== 0) {
+cards[0].focus();
+}
+setInterval(function () {
+var xhr = new XMLHttpRequest();
+xhr.open('GET', '/index.html?keepalive=' + Date.now(), true);
+xhr.send();
+}, 180000);
+})();
+
+
+
